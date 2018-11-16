@@ -12,6 +12,7 @@ angular.module('ui-notification').provider('Notification', function() {
         positionY: 'top',
         replaceMessage: false,
         templateUrl: 'angular-ui-notification.html',
+        onOpen: undefined,
         onClose: undefined,
         closeOnClick: true,
         maxCount: 0, // 0 - Infinite
@@ -50,6 +51,7 @@ angular.module('ui-notification').provider('Notification', function() {
             args.positionY = args.positionY ? args.positionY : options.positionY;
             args.positionX = args.positionX ? args.positionX : options.positionX;
             args.replaceMessage = args.replaceMessage ? args.replaceMessage : options.replaceMessage;
+            args.onOpen = args.onOpen ? args.onOpen : options.onOpen;
             args.onClose = args.onClose ? args.onClose : options.onClose;
             args.closeOnClick = (args.closeOnClick !== null && args.closeOnClick !== undefined) ? args.closeOnClick : options.closeOnClick;
             args.container = args.container ? args.container : options.container;
@@ -79,6 +81,7 @@ angular.module('ui-notification').provider('Notification', function() {
                 scope.title = $sce.trustAsHtml(args.title);
                 scope.t = args.type.substr(0,1);
                 scope.delay = args.delay;
+                scope.onOpen = args.onOpen;
                 scope.onClose = args.onClose;
 
                 var priorityCompareTop = function(a, b) {
@@ -194,6 +197,10 @@ angular.module('ui-notification').provider('Notification', function() {
                 }
 
                 scope._templateElement = templateElement;
+
+                if (scope.onOpen) {
+                    scope.onOpen(templateElement);
+                }
 
                 scope.kill = function(isHard) {
                     if (isHard) {
