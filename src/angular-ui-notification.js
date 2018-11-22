@@ -14,6 +14,7 @@ angular.module('ui-notification').provider('Notification', function() {
         templateUrl: 'angular-ui-notification.html',
         onOpen: undefined,
         onClose: undefined,
+        textAlign: 'left',
         closeOnClick: true,
         maxCount: 0, // 0 - Infinite
         container: 'body',
@@ -33,6 +34,7 @@ angular.module('ui-notification').provider('Notification', function() {
         var verticalSpacing = options.verticalSpacing;
         var horizontalSpacing = options.horizontalSpacing;
         var delay = options.delay;
+        var textAlign = options.textAlign;
 
         var messageElements = [];
         var isResizeBound = false;
@@ -56,6 +58,7 @@ angular.module('ui-notification').provider('Notification', function() {
             args.closeOnClick = (args.closeOnClick !== null && args.closeOnClick !== undefined) ? args.closeOnClick : options.closeOnClick;
             args.container = args.container ? args.container : options.container;
             args.priority = args.priority ? args.priority : options.priority;
+            args.textAlign = args.textAlign ? args.textAlign : options.textAlign;
             
             var template=$templateCache.get(args.template);
 
@@ -83,6 +86,7 @@ angular.module('ui-notification').provider('Notification', function() {
                 scope.delay = args.delay;
                 scope.onOpen = args.onOpen;
                 scope.onClose = args.onClose;
+                scope.textAlign = args.textAlign;
 
                 var priorityCompareTop = function(a, b) {
                     return a._priority - b._priority;
@@ -146,6 +150,14 @@ angular.module('ui-notification').provider('Notification', function() {
                 templateElement._positionX = args.positionX;
                 templateElement._priority = args.priority;
                 templateElement.addClass(args.type);
+                if (!!scope.textAlign) {
+                    angular.forEach(templateElement.children(), function(elem) {
+                        var el = angular.element(elem);
+                        if (el.hasClass('message')) {
+                            el.css('text-align', scope.textAlign)
+                        }
+                    });
+                }
 
                 var closeEvent = function(e) {
                     e = e.originalEvent || e;
